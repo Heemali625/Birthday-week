@@ -1,246 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>I Love You</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>I Love You</title>
 
-    <style>
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-            background: radial-gradient(circle at top, #2b2f77, #05060c 70%, #000);
-            font-family: 'Segoe UI', sans-serif;
-        }
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(circle at top, #2b2f77, #05060c 70%, #000);
+  font-family: 'Segoe UI', sans-serif;
+}
 
-        canvas {
-            display: block;
-        }
+canvas { display: block; }
 
-        /* HEART */
-        .heart {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 90px;
-            height: 90px;
-            background: #ff5b7f;
-            transform: translate(-50%, -50%) rotate(45deg);
-            animation: heartSway 7s ease-in-out infinite;
-            box-shadow: 0 0 40px rgba(255, 91, 127, 0.8);
-            z-index: 5;
-        }
+/* HEART */
+.heart {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90px;
+  height: 90px;
+  background: #ff5b7f;
+  transform: translate(-50%, -50%) rotate(45deg);
+  animation: heartSway 7s ease-in-out infinite;
+  box-shadow: 0 0 40px rgba(255,91,127,0.8);
+  z-index: 5;
+}
 
-        .heart::before,
-        .heart::after {
-            content: "";
-            position: absolute;
-            width: 90px;
-            height: 90px;
-            background: #ff5b7f;
-            border-radius: 50%;
-        }
+.heart::before,
+.heart::after {
+  content: "";
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  background: #ff5b7f;
+  border-radius: 50%;
+}
+.heart::before { top: -45px; left: 0; }
+.heart::after  { left: -45px; top: 0; }
 
-        .heart::before {
-            top: -45px;
-            left: 0;
-        }
+@keyframes heartSway {
+  0%   { transform: translate(-50%, -50%) rotate(45deg) rotateY(-16deg); }
+  50%  { transform: translate(-50%, -50%) rotate(45deg) rotateY(16deg); }
+  100% { transform: translate(-50%, -50%) rotate(45deg) rotateY(-16deg); }
+}
 
-        .heart::after {
-            left: -45px;
-            top: 0;
-        }
+/* TAP OVERLAY */
+#musicOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+}
 
-        @keyframes heartSway {
-            0% {
-                transform: translate(-50%, -50%) rotate(45deg) rotateY(-18deg);
-            }
+.overlayText {
+  color: #ffd6e6;
+  font-size: 22px;
+  text-shadow: 0 0 20px rgba(255,214,230,0.9);
+  animation: pulse 2s infinite;
+}
 
-            50% {
-                transform: translate(-50%, -50%) rotate(45deg) rotateY(18deg);
-            }
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
 
-            100% {
-                transform: translate(-50%, -50%) rotate(45deg) rotateY(-18deg);
-            }
-        }
+/* CUTE MESSAGE */
+#cuteMessage {
+  position: fixed;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 85%;
+  padding: 14px 18px;
+  text-align: center;
 
-        /* MUSIC OVERLAY */
-        #musicOverlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.88);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 20;
-        }
+  color: #ffeaf2;
+  font-size: 16px;
+  line-height: 1.6;
 
-        .overlayText {
-            color: #ffd6e6;
-            font-size: 22px;
-            letter-spacing: 1px;
-            text-shadow: 0 0 20px rgba(255, 214, 230, 0.9);
-            animation: pulse 2s infinite;
-        }
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(8px);
+  border-radius: 14px;
 
-        @keyframes pulse {
-            0% {
-                opacity: 0.6;
-            }
+  box-shadow: 0 0 25px rgba(255,214,230,0.25);
+  text-shadow: 0 0 10px rgba(255,214,230,0.6);
 
-            50% {
-                opacity: 1;
-            }
-
-            100% {
-                opacity: 0.6;
-            }
-        }
-
-        /* CUTE MESSAGE – FIXED */
-        #cuteMessage {
-            position: fixed;
-            bottom: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            max-width: 85%;
-            padding: 14px 18px;
-            text-align: center;
-
-            color: #ffeaf2;
-            font-size: 17px;
-            line-height: 1.6;
-            letter-spacing: 0.3px;
-
-            background: rgba(0, 0, 0, 0.45);
-            backdrop-filter: blur(8px);
-            border-radius: 14px;
-
-            box-shadow: 0 0 25px rgba(255, 214, 230, 0.25);
-            text-shadow: 0 0 10px rgba(255, 214, 230, 0.6);
-
-            opacity: 0;
-            transition: opacity 2.5s ease;
-            z-index: 15;
-        }
-    </style>
+  opacity: 0;
+  transition: opacity 2s ease;
+  z-index: 10;
+}
+</style>
 </head>
 
 <body>
 
-    <div class="heart"></div>
+<div class="heart"></div>
 
-    <div id="musicOverlay">
-        <div class="overlayText">Tap to begin 💖</div>
-    </div>
+<div id="musicOverlay">
+  <div class="overlayText">Tap to begin 💖</div>
+</div>
 
-    <!-- Cute message -->
-    <div id="cuteMessage">
-        Hey, Birthday Boy 💗<br><br>
-        So aaj pasun officially tuza Birthday Week start hotoy.<br>
-        So be ready for daily silly yet cute surprises like this ✨<br><br>
-        From,<br>
-        Yours truly 😁
-    </div>
+<div id="cuteMessage">
+  Hey, Birthday Boy 💗<br><br>
+  So aaj pasun officially tuza Birthday week start hotoy.<br>
+  Be ready for daily silly yet cute surprises like this ✨<br><br>
+  From,<br>
+  Yours truly 😁
+</div>
 
-    <audio id="bgMusic" loop>
-        <source src="tum-se-hi.mp3" type="audio/mpeg">
-    </audio>
+<!-- AUDIO (MOBILE SAFE) -->
+<audio id="bgMusic" preload="auto" playsinline>
+  <source src="tum-se-hi.mp3" type="audio/mpeg">
+</audio>
 
-    <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
-    <script>
-        /* MUSIC START */
-        const music = document.getElementById('bgMusic');
-        const overlay = document.getElementById('musicOverlay');
-        const message = document.getElementById('cuteMessage');
+<script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
+<script>
+/* AUDIO — MOBILE CHROME SAFE */
+const music = document.getElementById('bgMusic');
+const overlay = document.getElementById('musicOverlay');
+const message = document.getElementById('cuteMessage');
 
-        overlay.addEventListener('click', () => {
-            music.volume = 0.7;
-            music.play();
-            overlay.style.display = 'none';
+overlay.addEventListener('click', () => {
+  music.currentTime = 0;
+  music.muted = false;
+  music.play().catch(() => {});
+  overlay.style.display = 'none';
 
-            // show message softly
-            setTimeout(() => {
-                message.style.opacity = 1;
-            }, 1200);
-        });
+  setTimeout(() => {
+    message.style.opacity = 1;
+  }, 800);
+});
 
-        /* THREE.JS */
-        const scene = new THREE.Scene();
+/* THREE.JS */
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(
+  60,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
+camera.position.z = 180;
 
-        const camera = new THREE.PerspectiveCamera(
-            60,
-            window.innerWidth / window.innerHeight,
-            0.1,
-            1000
-        );
-        camera.position.z = 180;
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+function createTextSprite(text) {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
 
-        function createTextSprite(text) {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
+  canvas.width = 512;
+  canvas.height = 128;
 
-            canvas.width = 512;
-            canvas.height = 128;
+  ctx.font = '48px Segoe UI';
+  ctx.fillStyle = '#ffd6e6';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.shadowColor = 'rgba(255,214,230,0.9)';
+  ctx.shadowBlur = 20;
 
-            ctx.font = '48px Segoe UI';
-            ctx.fillStyle = '#ffd6e6';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.shadowColor = 'rgba(255,214,230,0.9)';
-            ctx.shadowBlur = 20;
+  ctx.fillText(text, canvas.width / 2, canvas.height / 2);
 
-            ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+  const texture = new THREE.CanvasTexture(canvas);
+  const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
+  const sprite = new THREE.Sprite(material);
+  sprite.scale.set(60, 15, 1);
+  return sprite;
+}
 
-            const texture = new THREE.CanvasTexture(canvas);
-            const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
-            const sprite = new THREE.Sprite(material);
+const textGroup = new THREE.Group();
+scene.add(textGroup);
 
-            sprite.scale.set(60, 15, 1);
-            return sprite;
-        }
+for (let i = 0; i < 32; i++) {
+  const sprite = createTextSprite('I love you');
 
-        const textGroup = new THREE.Group();
-        scene.add(textGroup);
+  const r = 90;
+  const t = Math.random() * Math.PI * 2;
+  const p = Math.acos(2 * Math.random() - 1);
 
-        for (let i = 0; i < 32; i++) {
-            const sprite = createTextSprite('I love you');
+  sprite.position.set(
+    r * Math.sin(p) * Math.cos(t),
+    r * Math.sin(p) * Math.sin(t),
+    r * Math.cos(p)
+  );
 
-            const r = 90;
-            const t = Math.random() * Math.PI * 2;
-            const p = Math.acos(2 * Math.random() - 1);
+  textGroup.add(sprite);
+}
 
-            sprite.position.set(
-                r * Math.sin(p) * Math.cos(t),
-                r * Math.sin(p) * Math.sin(t),
-                r * Math.cos(p)
-            );
+let time = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  time += 0.004;
 
-            textGroup.add(sprite);
-        }
+  textGroup.rotation.y = Math.sin(time) * 0.45;
+  textGroup.rotation.x = Math.sin(time * 0.7) * 0.3;
 
-        let time = 0;
-        function animate() {
-            requestAnimationFrame(animate);
-            time += 0.004;
+  renderer.render(scene, camera);
+}
+animate();
 
-            textGroup.rotation.y = Math.sin(time) * 0.45;
-            textGroup.rotation.x = Math.sin(time * 0.7) * 0.3;
-
-            renderer.render(scene, camera);
-        }
-        animate();
-    </script>
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
 
 </body>
-
 </html>

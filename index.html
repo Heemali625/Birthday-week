@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Your Birthday Week 💛</title>
+
+<style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(180deg, #f7efe5, #e9dcc9);
+    color: #3a2f2f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 28px 24px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    text-align: center;
+  }
+
+  h1 {
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+
+  .text {
+    font-size: 14px;
+    line-height: 1.7;
+    opacity: 0.85;
+    margin-bottom: 22px;
+  }
+
+  .music-btn {
+    margin-bottom: 18px;
+  }
+
+  .music-btn button {
+    border: none;
+    background: #c7a17a;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .enter-btn {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    background: #3a2f2f;
+    color: #fff;
+    padding: 12px 26px;
+    border-radius: 22px;
+    font-size: 14px;
+  }
+
+  .hint {
+    margin-top: 18px;
+    font-size: 12px;
+    opacity: 0.65;
+  }
+</style>
+</head>
+
+<body>
+
+<audio id="bgMusic" autoplay loop muted>
+  <source src="happy-birthday-song.mp3" type="audio/mpeg">
+</audio>
+
+<div class="card">
+  <h1>Hey, Birthday Boy 💛</h1>
+
+  <div class="text">
+    Udya pasun tuza birthdayweek start hotoy<br>
+    first birthday hai mere aaneke baad toh thoda fun toh banta hai..<br><br>
+
+    For the next few days,<br>
+    there’ll be something waiting for you —<br>
+    made with a lots of love,<br>
+    and a little mischief 😌<br><br>
+
+    P.s~ Ajibat husyari dakhvun mazya kadun kahi kadun ghyaych nahi ahe. Daily tuz kay surprise asel te tula samjel<br>
+    so have patience😁<br>
+    I love You🤗🤗
+  </div>
+
+  <div class="music-btn">
+    <button onclick="toggleMusic()">🎵 Turn Music On</button>
+  </div>
+
+  
+  
+</div>
+
+<script>
+  function toggleMusic() {
+    const music = document.getElementById("bgMusic");
+    music.muted = false;
+    music.play();
+  }
+</script>
+
+</body>
+</html>

@@ -17,6 +17,7 @@ html, body {
 
 canvas { display: block; }
 
+/* ---------- HEART ---------- */
 .heart {
   position: absolute;
   top: 50%;
@@ -25,9 +26,9 @@ canvas { display: block; }
   height: 90px;
   background: #ff5b7f;
   transform: translate(-50%, -50%) rotate(45deg);
-  animation: heartTilt 6s ease-in-out infinite;
+  animation: heartSway 7s ease-in-out infinite;
   box-shadow: 0 0 40px rgba(255,91,127,0.8);
-  z-index: 10;
+  z-index: 5;
 }
 
 .heart::before,
@@ -42,46 +43,66 @@ canvas { display: block; }
 .heart::before { top: -45px; left: 0; }
 .heart::after  { left: -45px; top: 0; }
 
-@keyframes heartTilt {
-  0% {
-    transform: translate(-50%, -50%) rotate(45deg) rotateY(-25deg);
-  }
-  50% {
-    transform: translate(-50%, -50%) rotate(45deg) rotateY(25deg);
-  }
-  100% {
-    transform: translate(-50%, -50%) rotate(45deg) rotateY(-25deg);
-  }
+@keyframes heartSway {
+  0%   { transform: translate(-50%, -50%) rotate(45deg) rotateY(-18deg); }
+  50%  { transform: translate(-50%, -50%) rotate(45deg) rotateY(18deg); }
+  100% { transform: translate(-50%, -50%) rotate(45deg) rotateY(-18deg); }
 }
 
-.tap-note {
-  position: absolute;
-  bottom: 20px;
-  width: 100%;
-  text-align: center;
-  font-size: 13px;
-  color: #aaa;
-  opacity: 0.7;
-  z-index: 10;
+/* ---------- MUSIC OVERLAY ---------- */
+#musicOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+}
+
+.overlayText {
+  color: #ffd6e6;
+  font-size: 22px;
+  letter-spacing: 1px;
+  text-shadow: 0 0 20px rgba(255,214,230,0.9);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
 }
 </style>
 </head>
 
 <body>
 
+<!-- Heart -->
 <div class="heart"></div>
-<div class="tap-note">Tap anywhere if music doesn’t start ♡</div>
 
-<audio id="bgMusic" autoplay loop>
+<!-- Tap overlay -->
+<div id="musicOverlay">
+  <div class="overlayText">Tap to begin 💖</div>
+</div>
+
+<!-- Music -->
+<audio id="bgMusic" loop>
   <source src="https://pagalworld.com.se/files/download/type/128/id/689" type="audio/mpeg">
 </audio>
 
 <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
 <script>
-document.body.addEventListener('click', () => {
-  document.getElementById('bgMusic').play();
+/* ---------- MUSIC START ---------- */
+const music = document.getElementById('bgMusic');
+const overlay = document.getElementById('musicOverlay');
+
+overlay.addEventListener('click', () => {
+  music.play();
+  overlay.style.display = 'none';
 });
 
+/* ---------- THREE.JS SETUP ---------- */
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(
@@ -96,7 +117,7 @@ const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-/* TEXT SPRITE FUNCTION */
+/* ---------- TEXT SPRITE ---------- */
 function createTextSprite(text) {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
@@ -124,11 +145,10 @@ function createTextSprite(text) {
   return sprite;
 }
 
-/* GROUP */
+/* ---------- TEXT GROUP ---------- */
 const textGroup = new THREE.Group();
 scene.add(textGroup);
 
-/* CREATE MANY "I LOVE YOU" */
 for (let i = 0; i < 32; i++) {
   const sprite = createTextSprite('I love you');
 
@@ -145,7 +165,7 @@ for (let i = 0; i < 32; i++) {
   textGroup.add(sprite);
 }
 
-/* ANIMATION */
+/* ---------- ANIMATION ---------- */
 let t = 0;
 function animate() {
   requestAnimationFrame(animate);
@@ -158,14 +178,13 @@ function animate() {
 }
 animate();
 
-/* RESPONSIVE */
+/* ---------- RESPONSIVE ---------- */
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 </script>
-
 
 </body>
 </html>

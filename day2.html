@@ -3,42 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Us, but make it cute</title>
+<title>Day 2 — Polaroid Memories</title>
 
 <style>
+/* ===== GLOBAL HARD RESET ===== */
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   margin: 0;
   padding: 0;
+  width: 100%;
   height: 100%;
   overflow: hidden;
-  background: radial-gradient(circle at top, #2a2f6b, #070812 70%, #000);
+  overscroll-behavior: none;
+  background: #05060c;
   font-family: 'Segoe UI', sans-serif;
 }
 
-/* TITLE */
-.title {
-  position: absolute;
-  top: 18px;
-  width: 100%;
-  text-align: center;
-  color: #ffe3ee;
-  font-size: 18px;
-  text-shadow: 0 0 15px rgba(255,214,230,0.7);
-  z-index: 5;
-}
-
-/* MUSIC OVERLAY */
-#musicOverlay {
+/* ===== TAP OVERLAY ===== */
+#startOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.85);
+  background: rgba(0,0,0,0.9);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 20;
+  z-index: 50;
 }
 
-.overlayText {
+#startOverlay span {
   color: #ffd6e6;
   font-size: 22px;
   text-shadow: 0 0 20px rgba(255,214,230,0.9);
@@ -46,160 +41,163 @@ html, body {
 }
 
 @keyframes pulse {
-  0% { opacity: 0.6; }
+  0% { opacity: 0.5; }
   50% { opacity: 1; }
-  100% { opacity: 0.6; }
+  100% { opacity: 0.5; }
 }
 
-/* BUBBLES */
-.bubbles {
+/* ===== BACKGROUND SLIDES ===== */
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100svh; /* mobile safe */
+  overflow: hidden;
+  z-index: 1;
+}
+
+.bg {
   position: absolute;
   inset: 0;
+  opacity: 0;
+  animation: bgSlide 60s infinite;
 }
 
-.bubble {
-  position: absolute;
-  width: 22vw;
-  max-width: 120px;
-  min-width: 90px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  overflow: hidden;
-  cursor: pointer;
-
-  border: 2px solid rgba(255,214,230,0.5);
-  box-shadow: 0 0 25px rgba(255,214,230,0.4);
-  animation: float 8s ease-in-out infinite;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.bubble img {
+.bg img {
   width: 100%;
   height: 100%;
+  object-fit: contain; /* NEVER crop faces */
+  object-position: center;
+}
+
+/* blur fill for empty space */
+.bg::before {
+  content: '';
+  position: absolute;
+  inset: -15%;
+  background: inherit;
+  filter: blur(28px);
+  transform: scale(1.2);
+  z-index: -1;
+}
+
+/* background timing */
+.bg:nth-child(1){animation-delay:0s}
+.bg:nth-child(2){animation-delay:12s}
+.bg:nth-child(3){animation-delay:24s}
+.bg:nth-child(4){animation-delay:36s}
+.bg:nth-child(5){animation-delay:48s}
+
+@keyframes bgSlide {
+  0%   { opacity:0; }
+  10%  { opacity:1; }
+  35%  { opacity:1; }
+  45%  { opacity:0; }
+  100% { opacity:0; }
+}
+
+/* dark overlay */
+.background::after {
+  content:'';
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.55);
+}
+
+/* ===== POLAROID STRIP ===== */
+.polaroid-wrap {
+  position: absolute;
+  bottom: clamp(6%, 10vw, 12%);
+  display: flex;
+  gap: clamp(28px, 5vw, 44px);
+  animation: slide 75s linear infinite;
+  z-index: 5;
+  width: max-content; /* CRITICAL: stops scroll */
+  will-change: transform;
+}
+
+@keyframes slide {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ===== POLAROID ===== */
+.polaroid {
+  width: clamp(190px, 34vw, 250px);
+  background: #fff;
+  padding: 12px 12px 30px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  transform: rotate(var(--r));
+  flex-shrink: 0;
+}
+
+.polaroid img {
+  width: 100%;
+  height: clamp(240px, 42vw, 300px);
   object-fit: cover;
 }
 
-/* FLOAT */
-@keyframes float {
-  0%   { transform: translateY(0); }
-  50%  { transform: translateY(-16px); }
-  100% { transform: translateY(0); }
-}
+/* natural messy rotations */
+.polaroid:nth-child(odd){ --r:-5deg }
+.polaroid:nth-child(even){ --r:4deg }
+.polaroid:nth-child(3n){ --r:-2deg }
 
-/* TEMP HIDE */
-.bubble.hide {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* MESSAGE BOX */
-#memoryBox {
-  position: fixed;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: 88%;
-  padding: 16px 20px;
-  text-align: center;
-
-  color: #ffeaf2;
-  font-size: 16px;
-  line-height: 1.6;
-
-  background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-
-  box-shadow: 0 0 30px rgba(255,214,230,0.25);
-  text-shadow: 0 0 10px rgba(255,214,230,0.6);
-
-  opacity: 0;
-  transition: opacity 0.6s ease;
-  z-index: 10;
-}
-
-/* HINT */
-.hint {
-  position: absolute;
-  bottom: 20px;
-  width: 100%;
-  text-align: center;
-  color: #aaa;
-  font-size: 13px;
-  opacity: 0.7;
+/* ===== AUDIO ===== */
+audio {
+  display: none;
 }
 </style>
 </head>
 
 <body>
 
-<div class="title">
-  Some tiny moments that became *us* 🌸
+<!-- START -->
+<div id="startOverlay"><span>Tap to begin 💗</span></div>
+
+<!-- BACKGROUND -->
+<div class="background">
+  <div class="bg"><img src="assets/day2/bg1.jpg"></div>
+  <div class="bg"><img src="assets/day2/bg2.jpg"></div>
+  <div class="bg"><img src="assets/day2/bg3.jpg"></div>
+  <div class="bg"><img src="assets/day2/bg4.jpg"></div>
+  <div class="bg"><img src="assets/day2/bg5.jpg"></div>
 </div>
 
-<!-- MUSIC OVERLAY -->
-<div id="musicOverlay">
-  <div class="overlayText">Tap to begin 💗</div>
+<!-- POLAROIDS -->
+<div class="polaroid-wrap">
+  <div class="polaroid"><img src="assets/day2/p1.jpeg"></div>
+  <div class="polaroid"><img src="assets/day2/p2.jpeg"></div>
+  <div class="polaroid"><img src="assets/day2/p3.jpeg"></div>
+  <div class="polaroid"><img src="assets/day2/p4.jpeg"></div>
+  <div class="polaroid"><img src="assets/day2/p5.jpeg"></div>
+  <div class="polaroid"><img src="assets/day2/p6.jpeg"></div>
+  <div class="polaroid"><img src="assets/day2/p7.jpeg"></div>
+  <div class="polaroid"><img src="assets/day2/p8.jpeg"></div>
+  <div class="polaroid"><img src="assets/day2/p9.jpeg"></div>
+  <div class="polaroid"><img src="assets/day2/p10.jpeg"></div>
+
+  <!-- duplicate for infinite loop -->
+  <div class="polaroid"><img src="assets/day2/p1.jpeg"></div>
+  <div class="polaroid"><img src="assets/day2/p2.jpeg"></div>
+  <div class="polaroid"><img src="assets/day2/p3.jpeg"></div>
+  <div class="polaroid"><img src="assets/day2/p4.jpeg"></div>
+  <div class="polaroid"><img src="assets/day2/p5.jpeg"></div>
 </div>
 
-<!-- BUBBLES -->
-<div class="bubbles">
-  <div class="bubble" style="top:28%; left:15%;" data-text="That one conversation where we talked for hours.">
-    <img src="assets/1.jpeg">
-  </div>
-  <div class="bubble" style="top:42%; left:60%;" data-text="Your calm energy is my favorite thing.">
-    <img src="assets/2.jpeg">
-  </div>
-  <div class="bubble" style="top:63%; left:30%;" data-text="Our silly jokes that only we understand.">
-    <img src="assets/3.jpeg">
-  </div>
-  <div class="bubble" style="top:55%; left:75%;" data-text="Somehow, you became my safe place.">
-    <img src="assets/4.jpeg">
-  </div>
-  <div class="bubble" style="top:38%; left:40%;" data-text="Us — slow, steady, and just right.">
-    <img src="assets/5.jpeg">
-  </div>
-</div>
-
-<div id="memoryBox"></div>
-
-<div class="hint">
-  Tap a bubble 💭
-</div>
-
-<!-- MUSIC (GITHUB + MOBILE SAFE) -->
+<!-- MUSIC -->
 <audio id="bgMusic" preload="auto" playsinline loop>
-  <source src="assets/Raabta.mp3" type="audio/mpeg">
+  <source src="assets/day2/day2.mp3" type="audio/mpeg">
 </audio>
 
 <script>
+const overlay = document.getElementById('startOverlay');
 const music = document.getElementById('bgMusic');
-const overlay = document.getElementById('musicOverlay');
-const bubbles = document.querySelectorAll('.bubble');
-const memoryBox = document.getElementById('memoryBox');
 
-/* MUSIC — SAFE */
 overlay.addEventListener('click', () => {
   music.currentTime = 0;
-  music.muted = false;
   music.play().catch(()=>{});
   overlay.style.display = 'none';
-});
-
-/* BUBBLE INTERACTION */
-bubbles.forEach(bubble => {
-  bubble.addEventListener('click', () => {
-    const text = bubble.dataset.text;
-
-    bubble.classList.add('hide');
-    memoryBox.textContent = text;
-    memoryBox.style.opacity = 1;
-
-    setTimeout(() => {
-      memoryBox.style.opacity = 0;
-      bubble.classList.remove('hide');
-    }, 3000);
-  });
 });
 </script>
 

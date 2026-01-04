@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Us, but make it cute</title>
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(circle at top, #2a2f6b, #070812 70%, #000);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* TITLE */
+.title {
+  position: absolute;
+  top: 18px;
+  width: 100%;
+  text-align: center;
+  color: #ffe3ee;
+  font-size: 18px;
+  text-shadow: 0 0 15px rgba(255,214,230,0.7);
+  z-index: 5;
+}
+
+/* MUSIC OVERLAY */
+#musicOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+}
+
+.overlayText {
+  color: #ffd6e6;
+  font-size: 22px;
+  text-shadow: 0 0 20px rgba(255,214,230,0.9);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+/* BUBBLES */
+.bubbles {
+  position: absolute;
+  inset: 0;
+}
+
+.bubble {
+  position: absolute;
+  width: 22vw;
+  max-width: 120px;
+  min-width: 90px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+
+  border: 2px solid rgba(255,214,230,0.5);
+  box-shadow: 0 0 25px rgba(255,214,230,0.4);
+  animation: float 8s ease-in-out infinite;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.bubble img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* FLOAT */
+@keyframes float {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-16px); }
+  100% { transform: translateY(0); }
+}
+
+/* TEMP HIDE */
+.bubble.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* MESSAGE BOX */
+#memoryBox {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 88%;
+  padding: 16px 20px;
+  text-align: center;
+
+  color: #ffeaf2;
+  font-size: 16px;
+  line-height: 1.6;
+
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+
+  box-shadow: 0 0 30px rgba(255,214,230,0.25);
+  text-shadow: 0 0 10px rgba(255,214,230,0.6);
+
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  z-index: 10;
+}
+
+/* HINT */
+.hint {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  color: #aaa;
+  font-size: 13px;
+  opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<div class="title">
+  Some tiny moments that became *us* 🌸
+</div>
+
+<!-- MUSIC OVERLAY -->
+<div id="musicOverlay">
+  <div class="overlayText">Tap to begin 💗</div>
+</div>
+
+<!-- BUBBLES -->
+<div class="bubbles">
+  <div class="bubble" style="top:28%; left:15%;" data-text="That one conversation where we talked for hours.">
+    <img src="assets/1.jpeg">
+  </div>
+  <div class="bubble" style="top:42%; left:60%;" data-text="Your calm energy is my favorite thing.">
+    <img src="assets/2.jpeg">
+  </div>
+  <div class="bubble" style="top:63%; left:30%;" data-text="Our silly jokes that only we understand.">
+    <img src="assets/3.jpeg">
+  </div>
+  <div class="bubble" style="top:55%; left:75%;" data-text="Somehow, you became my safe place.">
+    <img src="assets/4.jpeg">
+  </div>
+  <div class="bubble" style="top:38%; left:40%;" data-text="Us — slow, steady, and just right.">
+    <img src="assets/5.jpeg">
+  </div>
+</div>
+
+<div id="memoryBox"></div>
+
+<div class="hint">
+  Tap a bubble 💭
+</div>
+
+<!-- MUSIC (GITHUB + MOBILE SAFE) -->
+<audio id="bgMusic" preload="auto" playsinline loop>
+  <source src="assets/Raabta.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const music = document.getElementById('bgMusic');
+const overlay = document.getElementById('musicOverlay');
+const bubbles = document.querySelectorAll('.bubble');
+const memoryBox = document.getElementById('memoryBox');
+
+/* MUSIC — SAFE */
+overlay.addEventListener('click', () => {
+  music.currentTime = 0;
+  music.muted = false;
+  music.play().catch(()=>{});
+  overlay.style.display = 'none';
+});
+
+/* BUBBLE INTERACTION */
+bubbles.forEach(bubble => {
+  bubble.addEventListener('click', () => {
+    const text = bubble.dataset.text;
+
+    bubble.classList.add('hide');
+    memoryBox.textContent = text;
+    memoryBox.style.opacity = 1;
+
+    setTimeout(() => {
+      memoryBox.style.opacity = 0;
+      bubble.classList.remove('hide');
+    }, 3000);
+  });
+});
+</script>
+
+</body>
+</html>

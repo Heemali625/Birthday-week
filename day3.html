@@ -1,206 +1,273 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Us, but make it cute</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Day 3 — Billu & Bagad Billa</title>
 
 <style>
+* { box-sizing: border-box; }
+
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
   overflow: hidden;
-  background: radial-gradient(circle at top, #2a2f6b, #070812 70%, #000);
   font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(#ffffff, #f6f7fb);
 }
 
-/* TITLE */
-.title {
-  position: absolute;
-  top: 18px;
-  width: 100%;
-  text-align: center;
-  color: #ffe3ee;
-  font-size: 18px;
-  text-shadow: 0 0 15px rgba(255,214,230,0.7);
-  z-index: 5;
-}
-
-/* MUSIC OVERLAY */
-#musicOverlay {
+/* START OVERLAY */
+#startOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.85);
+  background: rgba(255,255,255,0.96);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 20;
+  justify-content: center;
+  z-index: 30;
 }
 
-.overlayText {
-  color: #ffd6e6;
-  font-size: 22px;
-  text-shadow: 0 0 20px rgba(255,214,230,0.9);
+#startOverlay span {
+  font-size: 20px;
+  color: #ff7aa2;
   animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
-  0% { opacity: 0.6; }
+  0% { opacity: 0.5; }
   50% { opacity: 1; }
-  100% { opacity: 0.6; }
+  100% { opacity: 0.5; }
 }
 
-/* BUBBLES */
-.bubbles {
-  position: absolute;
-  inset: 0;
-}
-
-.bubble {
-  position: absolute;
-  width: 22vw;
-  max-width: 120px;
-  min-width: 90px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  overflow: hidden;
-  cursor: pointer;
-
-  border: 2px solid rgba(255,214,230,0.5);
-  box-shadow: 0 0 25px rgba(255,214,230,0.4);
-  animation: float 8s ease-in-out infinite;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.bubble img {
+/* STORY AREA */
+.story {
+  position: relative;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* FLOAT */
+.scene {
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* TITLE IMAGES */
+.title-images {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 12px;
+}
+
+.title-images img {
+  width: 130px;
+  max-width: 40vw;
+  animation: float 4s ease-in-out infinite;
+}
+
+/* MAIN IMAGE */
+.scene img {
+  width: 100%;
+  max-height: 60vh;
+  object-fit: contain;
+  animation: float 4s ease-in-out infinite;
+}
+
 @keyframes float {
-  0%   { transform: translateY(0); }
-  50%  { transform: translateY(-16px); }
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
   100% { transform: translateY(0); }
 }
 
-/* TEMP HIDE */
-.bubble.hide {
-  opacity: 0;
-  pointer-events: none;
+/* TITLE TEXT */
+.title {
+  font-size: 18px;
+  color: #ff7aa2;
+  margin-bottom: 10px;
 }
 
-/* MESSAGE BOX */
-#memoryBox {
-  position: fixed;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: 88%;
-  padding: 16px 20px;
-  text-align: center;
-
-  color: #ffeaf2;
-  font-size: 16px;
+/* STORY TEXT */
+.text {
+  margin-top: 16px;
+  font-size: 15px;
   line-height: 1.6;
+  color: #444;
+  white-space: pre-line;
+}
 
-  background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
+/* FLOATING BACKGROUND HEARTS */
+.bg-heart {
+  position: absolute;
+  bottom: -20px;
+  font-size: 14px;
+  opacity: 0.3;
+  animation: rise 7s linear infinite;
+}
 
-  box-shadow: 0 0 30px rgba(255,214,230,0.25);
-  text-shadow: 0 0 10px rgba(255,214,230,0.6);
-
-  opacity: 0;
-  transition: opacity 0.6s ease;
-  z-index: 10;
+@keyframes rise {
+  from { transform: translateY(0); opacity: 0.4; }
+  to { transform: translateY(-120vh); opacity: 0; }
 }
 
 /* HINT */
 .hint {
-  position: absolute;
-  bottom: 20px;
+  position: fixed;
+  bottom: 16px;
   width: 100%;
   text-align: center;
-  color: #aaa;
   font-size: 13px;
-  opacity: 0.7;
+  color: #aaa;
 }
 </style>
 </head>
 
 <body>
 
-<div class="title">
-  Some tiny moments that became *us* 🌸
+<!-- START -->
+<div id="startOverlay">
+  <span>Tap to begin 💗</span>
 </div>
 
-<!-- MUSIC OVERLAY -->
-<div id="musicOverlay">
-  <div class="overlayText">Tap to begin 💗</div>
-</div>
-
-<!-- BUBBLES -->
-<div class="bubbles">
-  <div class="bubble" style="top:28%; left:15%;" data-text="That one conversation where we talked for hours.">
-    <img src="assets/1.jpeg">
-  </div>
-  <div class="bubble" style="top:42%; left:60%;" data-text="Your calm energy is my favorite thing.">
-    <img src="assets/2.jpeg">
-  </div>
-  <div class="bubble" style="top:63%; left:30%;" data-text="Our silly jokes that only we understand.">
-    <img src="assets/3.jpeg">
-  </div>
-  <div class="bubble" style="top:55%; left:75%;" data-text="Somehow, you became my safe place.">
-    <img src="assets/4.jpeg">
-  </div>
-  <div class="bubble" style="top:38%; left:40%;" data-text="Us — slow, steady, and just right.">
-    <img src="assets/5.jpeg">
+<div class="story" onclick="nextScene()">
+  <div class="scene">
+    <div id="titleImages" class="title-images"></div>
+    <div id="sceneTitle" class="title"></div>
+    <img id="sceneImg" />
+    <div class="text" id="sceneText"></div>
   </div>
 </div>
 
-<div id="memoryBox"></div>
+<div class="hint">Tap anywhere to continue ✨</div>
 
-<div class="hint">
-  Tap a bubble 💭
-</div>
-
-<!-- MUSIC (GITHUB + MOBILE SAFE) -->
-<audio id="bgMusic" preload="auto" playsinline loop>
-  <source src="assets/Raabta.mp3" type="audio/mpeg">
+<!-- MUSIC -->
+<audio id="bgMusic" loop playsinline>
+  <source src="assets/day3/Raabta.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 const music = document.getElementById('bgMusic');
-const overlay = document.getElementById('musicOverlay');
-const bubbles = document.querySelectorAll('.bubble');
-const memoryBox = document.getElementById('memoryBox');
+const overlay = document.getElementById('startOverlay');
 
-/* MUSIC — SAFE */
 overlay.addEventListener('click', () => {
-  music.currentTime = 0;
-  music.muted = false;
+  music.volume = 0.7;
   music.play().catch(()=>{});
   overlay.style.display = 'none';
 });
 
-/* BUBBLE INTERACTION */
-bubbles.forEach(bubble => {
-  bubble.addEventListener('click', () => {
-    const text = bubble.dataset.text;
+/* 🌸 SCENES (TEXT UNCHANGED) */
+const scenes = [
+  {
+    title: "Story of how billu fell for bagad billa",
+    imgs: [
+      "assets/day3/billu.png",
+      "assets/day3/bagad-billa.png"
+    ],
+    text: ""
+  },
+  {
+    img: "assets/day3/scene1.png",
+    text: `My heart was dead
+Love scared me..
+Relationships made me sweat in fear...`
+  },
+  {
+    img: "assets/day3/scene2.png",
+    text: `Then billu met bagad billa..
+It was good meeting..
+But billu never thought much about it😂`
+  },
+  {
+    img: "assets/day3/scene3.png",
+    text: `Billu was ready to face rejection 🤣🤣`
+  },
+  {
+    img: "assets/day3/scene4.png",
+    text: `Then they started talking alot..
+they even met 2-3 times
+And billu started to take this situation seriously 😁😁`
+  },
+  {
+    img: "assets/day3/scene5.png",
+    text: `Billu was like "uhh oh lagta hai billu iss baar phasne wala hai"😂😂`
+  },
+  {
+    img: "assets/day3/scene6.png",
+    text: `And exactly as billu thought bagad billa gave green signal saying yes for this marriage 😂😂
+🤦And billu phas hi gayi😁😁`
+  },
+  {
+    img: "assets/day3/scene7.png",
+    text: `But billu ko bhi thoda thoda happy feel huA😁😁
+Akhir billu ab single jo nhi rehne wali😮‍💨😮‍💨😮‍💨`
+  },
+  {
+    img: "assets/day3/scene8.png",
+    text: `Couples ko dekh dekhke single billu pagal ho chuki thi🥹🥹
+But dheere dheere billu ko apne andar dhak dhak sunayi diya...
+Billu ko akhir ek bagad billa jo pasand aa gya tha😂😂
+And slowly yet steadily billu started falling in love for that one bagad billa..
+😁😁😁 Bas itni si thi yeh story...
+Arey nhiii abhi aur bhi hai...
+Stay tunned billu aur bagad bille ki story ke next part ke liye...`
+  }
+];
 
-    bubble.classList.add('hide');
-    memoryBox.textContent = text;
-    memoryBox.style.opacity = 1;
+let index = 0;
 
-    setTimeout(() => {
-      memoryBox.style.opacity = 0;
-      bubble.classList.remove('hide');
-    }, 3000);
-  });
-});
+const imgEl = document.getElementById('sceneImg');
+const textEl = document.getElementById('sceneText');
+const titleEl = document.getElementById('sceneTitle');
+const titleImages = document.getElementById('titleImages');
+
+function render() {
+  titleImages.innerHTML = "";
+  titleEl.textContent = scenes[index].title || "";
+  textEl.textContent = scenes[index].text || "";
+
+  if (scenes[index].imgs) {
+    imgEl.style.display = "none";
+    scenes[index].imgs.forEach(src => {
+      const im = document.createElement("img");
+      im.src = src;
+      titleImages.appendChild(im);
+    });
+  } else {
+    imgEl.style.display = "block";
+    imgEl.src = scenes[index].img;
+  }
+
+  spawnBgHeart();
+}
+
+function nextScene() {
+  index = (index + 1) % scenes.length;
+  render();
+}
+
+/* BACKGROUND HEARTS */
+function spawnBgHeart() {
+  const h = document.createElement('div');
+  h.className = 'bg-heart';
+  h.textContent = Math.random() > 0.5 ? '💗' : '✨';
+  h.style.left = Math.random() * 100 + 'vw';
+  h.style.animationDuration = 5 + Math.random() * 4 + 's';
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 9000);
+}
+
+render();
 </script>
 
 </body>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>For You 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{
+  min-height:100vh;
+  background:radial-gradient(circle at top,#2b1055,#000);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;color:#fff
+}
+.stars{
+  position:fixed;inset:0;
+  background:url('https://raw.githubusercontent.com/JulianLaval/canvas-particle-network/master/img/stars.png');
+  opacity:.35;animation:move 80s linear infinite
+}
+@keyframes move{to{background-position:-2000px 2000px}}
+
+.card{
+  width:380px;max-width:92%;
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(18px);
+  border-radius:22px;
+  padding:28px 24px;
+  text-align:center;
+  box-shadow:0 30px 80px rgba(0,0,0,.7);
+  animation:enter .6s ease
+}
+@keyframes enter{from{opacity:0;transform:scale(.9)}to{opacity:1}}
+.hidden{display:none}
+
+/* loader */
+.heart-loader{width:120px;height:110px;margin:0 auto 12px}
+.heart-path{
+  fill:none;stroke:#ff5fa2;stroke-width:6;
+  stroke-dasharray:1000;stroke-dashoffset:1000;
+  animation:draw 4.5s ease forwards
+}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+.big-heart{font-size:80px;animation:beat 1.2s infinite}
+@keyframes beat{50%{transform:scale(1.15)}}
+
+/* gateway */
+.gateway-card{
+  background:rgba(20,20,20,.65);
+  border-radius:26px;
+  padding:34px 26px
+}
+.gateway-lock{font-size:42px;color:#ff66c4;margin-bottom:12px}
+.gateway-title{font-size:26px;color:#ff9adf;margin-bottom:6px}
+.gateway-sub{font-size:14px;opacity:.9}
+.gateway-hint{font-size:12px;opacity:.7;margin:16px 0}
+
+.heart-box{
+  display:flex;justify-content:center;gap:18px;
+  background:rgba(255,255,255,.08);
+  border-radius:18px;padding:18px;
+  position:relative;margin-bottom:18px;
+  font-size:20px
+}
+.heart-box span{opacity:.45}
+.heart-box input{position:absolute;inset:0;opacity:0}
+
+.unlock-btn{
+  padding:14px;width:100%;
+  border:none;border-radius:18px;
+  background:linear-gradient(135deg,#ff4ecd,#8a3cff);
+  color:#fff;font-weight:500;cursor:pointer
+}
+
+/* letter */
+.letter-box{
+  min-height:200px;
+  text-align:left;
+  line-height:1.8;
+  font-size:14px
+}
+
+/* gallery */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;margin-top:16px
+}
+.vid{background:rgba(0,0,0,.4);border-radius:14px;padding:6px;cursor:pointer}
+.vid video{width:100%;border-radius:10px}
+.caption{font-size:12px;margin-top:6px;opacity:.85}
+
+/* modal */
+.modal{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.75);
+  display:flex;align-items:center;justify-content:center;
+  z-index:999
+}
+.modal.hidden{display:none}
+.modal-content{width:90%;max-width:420px;text-align:center}
+.modal video{width:100%;border-radius:18px}
+.modal-caption{margin-top:10px;font-size:13px}
+
+audio{display:none}
+</style>
+</head>
+
+<body>
+<div class="stars"></div>
+
+<audio autoplay loop>
+  <source src="background-music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- LOADER -->
+<div class="card" id="loader">
+  <svg class="heart-loader" viewBox="0 0 512 512">
+    <path class="heart-path"
+      d="M256 448s-48-32-96-80C80 288 32 224 32 160
+      32 96 80 48 144 48c48 0 80 32 112 64
+      32-32 64-64 112-64 64 0 112 48 112 112
+      0 64-48 128-128 208-48 48-96 80-96 80z"/>
+  </svg>
+  <p>Filling this heart slowly… 💖</p>
+</div>
+
+<!-- GATEWAY -->
+<div class="card hidden gateway-card" id="gate">
+  <div class="gateway-lock">🔒</div>
+  <div class="gateway-title">Secret Gateway</div>
+  <div class="gateway-sub">Enter the code to unlock my heart 💕</div>
+  <div class="gateway-hint">💡 Hint: Three numbers that mean “I Love You”</div>
+
+  <div class="heart-box" id="heartBox">
+    <span>🤍</span><span>🤍</span><span>🤍</span>
+    <input id="pass" maxlength="3" inputmode="numeric">
+  </div>
+
+  <button class="unlock-btn" onclick="unlock()">💗 Unlock My Heart 💗</button>
+</div>
+
+<!-- LETTER -->
+<div class="card hidden" id="letter">
+  <div class="big-heart">💖</div>
+  <div class="letter-box" id="typedLetter"></div>
+  <button onclick="openGallery()">Take a peek 👀</button>
+</div>
+
+<!-- GALLERY -->
+<div class="card hidden" id="gallery">
+  <h2>Our Tiny Chaos 😂</h2>
+  <div class="gallery">
+    <div class="vid" onclick="openVideo(0)">
+      <video src="assets/day4/chaos.mp4" muted></video>
+      <div class="caption">Too dramatic 😜</div>
+    </div>
+    <div class="vid" onclick="openVideo(1)">
+      <video src="assets/day4/irritate.mp4" muted></video>
+      <div class="caption">Irritate karna zaroori hai 😁</div>
+    </div>
+    <div class="vid" onclick="openVideo(2)">
+      <video src="assets/day4/mood-swings.mp4" muted></video>
+      <div class="caption">Mood swings 🫠</div>
+    </div>
+    <div class="vid" onclick="openVideo(3)">
+      <video src="assets/day4/same-same.mp4" muted></video>
+      <div class="caption">Same madness 💕</div>
+    </div>
+  </div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="modal hidden" id="videoModal" onclick="closeVideo()">
+  <div class="modal-content">
+    <video id="modalVideo" controls onclick="event.stopPropagation()"></video>
+    <div class="modal-caption" id="modalCaption"></div>
+  </div>
+</div>
+
+<script>
+const letterText=`This little space holds more than justh words.
+
+It holds smiles, laughter,
+and moments that quietly became special.
+
+Somewhere between jokes
+and comfortable silences,
+you became my favorite part of the day. 💗`;
+
+let idx=0,currentIndex=0,startX=0;
+const videos=[
+{src:'assets/day4/chaos.mp4',caption:'Too dramatic 😜'},
+{src:'assets/day4/irritate.mp4',caption:'Irritate karna zaroori hai 😁'},
+{src:'assets/day4/mood-swings.mp4',caption:'Mood swings 🫠'},
+{src:'assets/day4/same-same.mp4',caption:'Same madness 💕'}
+];
+
+setTimeout(()=>{loader.classList.add('hidden');gate.classList.remove('hidden');pass.focus()},4700);
+
+/* hearts → digits */
+pass.addEventListener('input',()=>{
+  document.querySelectorAll('#heartBox span')
+    .forEach((h,i)=>h.textContent=pass.value[i]||'🤍');
+});
+
+function unlock(){
+  if(pass.value.length===3){
+    gate.classList.add('hidden');
+    letter.classList.remove('hidden');
+    typeLetter();
+  }
+}
+
+function typeLetter(){
+  typedLetter.innerHTML='';
+  idx=0;
+  const i=setInterval(()=>{
+    const c=letterText[idx];
+    typedLetter.innerHTML+= c===' ' ? '&nbsp;' : c==='\n'?'<br>':c;
+    idx++; if(idx>=letterText.length)clearInterval(i);
+  },32);
+}
+
+function openGallery(){letter.classList.add('hidden');gallery.classList.remove('hidden')}
+function openVideo(i){currentIndex=i;play();videoModal.classList.remove('hidden')}
+
+function play(){
+  modalVideo.pause();
+  modalVideo.src=videos[currentIndex].src;
+  modalCaption.textContent=videos[currentIndex].caption;
+  modalVideo.load();
+  modalVideo.play();
+}
+
+function closeVideo(){modalVideo.pause();videoModal.classList.add('hidden')}
+
+/* ===== POPUP SCROLL + SWIPE ===== */
+videoModal.addEventListener('wheel',(e)=>{
+  e.preventDefault();
+  if(e.deltaY>0 && currentIndex<videos.length-1){currentIndex++;play()}
+  if(e.deltaY<0 && currentIndex>0){currentIndex--;play()}
+},{passive:false});
+
+modalVideo.addEventListener('touchstart',e=>startX=e.touches[0].clientX);
+modalVideo.addEventListener('touchend',e=>{
+  const endX=e.changedTouches[0].clientX;
+  if(startX-endX>50 && currentIndex<videos.length-1){currentIndex++;play()}
+  if(endX-startX>50 && currentIndex>0){currentIndex--;play()}
+});
+</script>
+
+</body>
+</html>

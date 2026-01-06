@@ -2,121 +2,410 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<title>For You 💖</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Day 4 — Intro</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-* { box-sizing: border-box; }
-
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background: #bfe9f5;
-  font-family: system-ui, -apple-system;
-  overflow: hidden;
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{
+  min-height:100vh;
+  background:radial-gradient(circle at top,#2b1055,#000);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;color:#fff
 }
 
-/* ---------- INTRO WRAPPER ---------- */
-.intro {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+/* ===== STAR BACKGROUND ===== */
+.stars{
+  position:fixed;inset:0;
+  background:url('https://raw.githubusercontent.com/JulianLaval/canvas-particle-network/master/img/stars.png');
+  opacity:.28;
+  animation:move 90s linear infinite;
+  z-index:-3
+}
+@keyframes move{to{background-position:-2000px 2000px}}
+
+/* ===== FLOATING HEARTS + STARS ===== */
+.floating{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-2;
+  overflow:hidden
+}
+.float{
+  position:absolute;
+  bottom:-60px;
+  opacity:.55;
+  filter:drop-shadow(0 0 6px rgba(255,255,255,.4));
+  animation:floatUp linear infinite;
+}
+@keyframes floatUp{
+  from{transform:translateY(0) translateX(0);opacity:0}
+  10%{opacity:.55}
+  to{transform:translateY(-130vh) translateX(var(--drift));opacity:0}
 }
 
-/* ---------- SCROLL WINDOW ---------- */
-.scroll-window {
-  width: 90vw;
-  max-width: 420px;
-  height: 70vh;
-  overflow: hidden;
-  position: relative;
+/* ===== CARD BASE ===== */
+.card{
+  width:380px;max-width:92%;
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(18px);
+  border-radius:24px;
+  padding:30px 26px;
+  text-align:center;
+  box-shadow:0 30px 90px rgba(0,0,0,.7);
+  animation:enter .6s ease
+}
+@keyframes enter{from{opacity:0;transform:scale(.9)}to{opacity:1}}
+.hidden{display:none}
+
+/* ===== LOADER ===== */
+.heart-loader{width:120px;height:110px;margin:0 auto 14px}
+.heart-path{
+  fill:none;stroke:#ff5fa2;stroke-width:6;
+  stroke-dasharray:1000;stroke-dashoffset:1000;
+  animation:draw 4.5s ease forwards
+}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+/* ===== GLASS GATEWAY ===== */
+.gateway-glass{
+  background:rgba(18,14,36,.6);
+  backdrop-filter:blur(28px) saturate(160%);
+  border-radius:28px;
+  padding:36px 30px;
+  box-shadow:
+    0 45px 100px rgba(0,0,0,.65),
+    inset 0 0 0 1px rgba(255,255,255,.08);
+}
+.lock-icon{font-size:36px;margin-bottom:14px}
+.gate-title{font-size:26px;font-weight:600;margin-bottom:6px}
+.gate-sub{font-size:14px;opacity:.85;margin-bottom:22px}
+
+/* heart input */
+.heart-input{
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  padding:18px;
+  background:rgba(255,255,255,.06);
+  border-radius:18px;
+  position:relative;
+  margin-bottom:26px;
+  border:1px solid rgba(255,255,255,.12);
+  transition:.35s ease;
+}
+.heart-input span{font-size:18px;opacity:.6}
+.heart-input input{position:absolute;inset:0;opacity:0}
+.heart-input.active{
+  border-color:#ff6ecf;
+  box-shadow:0 0 22px rgba(255,110,207,.45)
 }
 
-/* ---------- SCROLL TRACK ---------- */
-.scroll-track {
-  position: absolute;
-  width: 100%;
-  top: 0;
-  transition: transform 1.6s ease-in-out;
+/* buttons */
+.unlock-btn,.peek-btn{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:18px;
+  font-size:15px;
+  font-weight:500;
+  color:#fff;
+  cursor:pointer;
+  background:linear-gradient(135deg,#ff6ecf,#7a5cff);
+  box-shadow:0 16px 45px rgba(122,92,255,.45);
+  margin-top: 25px;
 }
 
-/* ---------- FRAME ---------- */
-.frame {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 40px;
+/* ===== LETTER ===== */
+.big-heart{font-size:80px;animation:beat 1.2s infinite;margin-bottom:10px}
+@keyframes beat{50%{transform:scale(1.15)}}
+
+.letter-box{
+  max-height:260px;
+  overflow-y:auto;
+  overflow-x:hidden;          /* ✅ kills horizontal scroll */
+  word-wrap:break-word;       /* ✅ allows wrapping */
+  white-space:normal;         /* ✅ overrides nbsp behavior */
+}
+/* slim, elegant scrollbar */
+.letter-box::-webkit-scrollbar{
+  width:4px;
+}
+.letter-box::-webkit-scrollbar-track{
+  background:transparent;
+}
+.letter-box::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,.25);
+  border-radius:10px;
 }
 
-.frame img {
-  width: 100%;
-  height: auto;
-  display: block;
+
+/* ===== GALLERY ===== */
+.gallery-title{
+  font-size:20px;
+  font-weight:600;
+  margin-bottom:6px;
+}
+.gallery-subtitle{
+  font-size:13px;
+  opacity:.8;
+  margin-bottom:18px;
 }
 
-/* ---------- CONTINUE ---------- */
-.continue-btn {
-  margin-top: 20px;
-  padding: 12px 26px;
-  border-radius: 30px;
-  border: none;
-  background: #ff7aa2;
-  color: white;
-  font-size: 16px;
-  display: none;
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
 }
+.vid{
+  background:rgba(0,0,0,.45);
+  border-radius:16px;
+  padding:8px;
+  cursor:pointer;
+  transition:.3s;
+}
+.vid:hover{transform:translateY(-3px)}
+.vid video{width:100%;border-radius:12px}
+.caption{font-size:12px;margin-top:6px;opacity:.85}
+
+/* ===== MODAL ===== */
+.modal{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.75);
+  display:flex;align-items:center;justify-content:center;
+  z-index:999
+}
+.modal.hidden{display:none}
+.modal-content{width:90%;max-width:420px;text-align:center}
+.modal video{width:100%;border-radius:18px}
+.modal-caption{margin-top:10px;font-size:13px}
+
+audio{display:none}
 </style>
 </head>
 
 <body>
 
-<div class="intro" id="intro">
-  <div class="scroll-window">
-    <div class="scroll-track" id="track">
-      <div class="frame"><img src="assets/day4/bouquet/1.png"></div>
-      <div class="frame"><img src="assets/day4/bouquet/2.png"></div>
-      <div class="frame"><img src="assets/day4/bouquet/3.png"></div>
-      <div class="frame"><img src="assets/day4/bouquet/4.png"></div>
-      <div class="frame"><img src="assets/day4/bouquet/5.png"></div>
-    </div>
+<div class="stars"></div>
+<div class="floating" id="floating"></div>
+
+<audio autoplay loop>
+  <source src="background-music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- LOADER -->
+<div class="card" id="loader">
+  <svg class="heart-loader" viewBox="0 0 512 512">
+    <path class="heart-path"
+      d="M256 448s-48-32-96-80C80 288 32 224 32 160
+      32 96 80 48 144 48c48 0 80 32 112 64
+      32-32 64-64 112-64 64 0 112 48 112 112
+      0 64-48 128-128 208-48 48-96 80-96 80z"/>
+  </svg>
+  <p>Filling this heart slowly… 💖</p>
+</div>
+
+<!-- GATEWAY -->
+<div class="card hidden gateway-glass" id="gate">
+  <div class="lock-icon">🔐</div>
+  <div class="gate-title">Secret Gateway</div>
+  <div class="gate-sub">Password hint: it’s something that means 'I Love You' 🫣</div>
+
+  <div class="heart-input" id="heartBox">
+    <span>🤍</span><span>🤍</span><span>🤍</span>
+    <input id="pass" maxlength="3" inputmode="numeric">
   </div>
 
-  <button class="continue-btn" id="continueBtn">Continue 💗</button>
+  <button class="unlock-btn" onclick="unlock()">Unlock 💖</button>
+</div>
+
+<!-- LETTER -->
+<div class="card hidden" id="letter">
+  <div class="big-heart">💖</div>
+  <div class="letter-box" id="typedLetter"></div>
+  <button class="peek-btn" onclick="openGallery()">Take a peek 👀</button>
+</div>
+
+<!-- GALLERY -->
+<div class="card hidden" id="gallery">
+  <div class="gallery-title">Dramatic Chaotic Life On the Way</div>
+  <div class="gallery-subtitle">kyunki nautanki zaroori hai 😜</div>
+
+  <div class="gallery">
+    <div class="vid" onclick="openVideo(0)">
+      <video src="assets/day4/chaos.mp4" muted></video>
+      <div class="caption">Too dramatic 😜</div>
+    </div>
+    <div class="vid" onclick="openVideo(1)">
+      <video src="assets/day4/irritate.mp4" muted></video>
+      <div class="caption">Irritate karna 😁</div>
+    </div>
+    <div class="vid" onclick="openVideo(2)">
+      <video src="assets/day4/mood-swings.mp4" muted></video>
+      <div class="caption">Mood swings 🫠</div>
+    </div>
+    <div class="vid" onclick="openVideo(3)">
+      <video src="assets/day4/same-same.mp4" muted></video>
+      <div class="caption">Same madness 💕</div>
+    </div>
+  </div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="modal hidden" id="videoModal" onclick="closeVideo()">
+  <div class="modal-content">
+    <video id="modalVideo" controls onclick="event.stopPropagation()"></video>
+    <div class="modal-caption" id="modalCaption"></div>
+  </div>
 </div>
 
 <script>
-const track = document.getElementById("track");
-const continueBtn = document.getElementById("continueBtn");
+/* floating bg */
+const floating=document.getElementById('floating');
+const icons=['💖','💗','✨','⭐','💫'];
+function spawn(){
+  const e=document.createElement('div');
+  e.className='float';
+  e.textContent=icons[Math.floor(Math.random()*icons.length)];
+  e.style.left=Math.random()*100+'%';
+  e.style.fontSize=12+Math.random()*22+'px';
+  e.style.animationDuration=18+Math.random()*25+'s';
+  e.style.setProperty('--drift',(Math.random()*120-60)+'px');
+  floating.appendChild(e);
+  setTimeout(()=>e.remove(),45000);
+}
+setInterval(spawn,1200);
 
-const frames = document.querySelectorAll(".frame");
-let index = 0;
+/* flow */
+setTimeout(()=>{loader.classList.add('hidden');gate.classList.remove('hidden')},4700);
 
-/* calculate frame height AFTER images load */
-window.onload = () => {
-  const frameHeight = frames[0].offsetHeight + 40;
+pass.addEventListener('focus',()=>heartBox.classList.add('active'));
+pass.addEventListener('blur',()=>heartBox.classList.remove('active'));
+pass.addEventListener('input',()=>{
+  document.querySelectorAll('#heartBox span')
+    .forEach((h,i)=>h.textContent=pass.value[i]||'🤍');
+});
 
-  function scrollNext() {
-    index++;
-    if (index >= frames.length) {
-      continueBtn.style.display = "block";
-      return;
-    }
-    track.style.transform = `translateY(-${index * frameHeight}px)`;
-    setTimeout(scrollNext, 2200); // slow + pause
+/* LETTER TEXT UNCHANGED */
+const letterText=`To my Bokya,
+हे पत्र मुद्दाम बसून लिहिलेलं नाही.
+तू डोक्यात आलास… आणि शब्द आले.
+तू कधी हळूच माझ्या आयुष्याचा भाग झालास, ते मलाच कळलं नाही.
+
+आज मात्र जाणवतं — तू आहेस म्हणून काही गोष्टी आपोआप सोप्या वाटतात.
+दिवस थोडा हलका वाटतो, आणि मन थोडं शांत.
+
+मी तुझ्याबद्दल फार मोठ्या गोष्टी बोलत नाही.
+पण तुझा आवाज ऐकला की बरं वाटतं,
+तुझं नाव स्क्रीनवर दिसलं की हसू येतं,
+आणि तू दिसला की… बाकी सगळं थोडं मागे पडतं.
+
+मी तुझी आठवण काढते.
+खूप शांतपणे, कुठलाही गोंधळ न करता.
+बोलत नाही, दाखवत नाही,
+पण मनात कुठेतरी तू नेहमी असतोस.
+
+मला काय हवंय हे सांगणं सोपं आहे —
+तू असाच राहा.
+जसा आहेस तसाच.
+माझ्या शेजारी.
+
+बाकी zindagi haseen hai jab sath tumhara hai.
+— yours cartoon 🤍`;
+
+function unlock(){
+  if(pass.value.length===3){
+    gate.classList.add('hidden');
+    letter.classList.remove('hidden');
+    typedLetter.innerHTML='';
+    let i=0;
+    const t=setInterval(()=>{
+      const c=letterText[i];
+      typedLetter.innerHTML+= c===' ' ? '&nbsp;' : c==='\n'?'<br>':c;
+      i++; if(i>=letterText.length)clearInterval(t);
+    },32);
   }
+}
 
-  setTimeout(scrollNext, 2200);
-};
+function openGallery(){
+  letter.classList.add('hidden');
+  gallery.classList.remove('hidden');
+}
 
-/* Continue just hides intro for now */
-continueBtn.onclick = () => {
-  document.getElementById("intro").style.display = "none";
-  console.log("Intro completed cleanly ✅");
-};
+let currentIndex=0;
+const videos=[
+{src:'assets/day4/chaos.mp4',caption:'Too dramatic 😜'},
+{src:'assets/day4/irritate.mp4',caption:'Irritate karna 😁'},
+{src:'assets/day4/mood-swings.mp4',caption:'Mood swings 🫠'},
+{src:'assets/day4/same-same.mp4',caption:'Same madness 💕'}
+];
+
+function openVideo(index){
+  currentIndex=index;
+  modalVideo.src=videos[currentIndex].src;
+  modalCaption.textContent=videos[currentIndex].caption;
+  videoModal.classList.remove('hidden');
+  modalVideo.play();
+}
+function closeVideo(){
+  modalVideo.pause();
+  videoModal.classList.add('hidden');
+}
+
+/* ===============================
+   VIDEO POPUP SCROLL + SWIPE FIX
+   =============================== */
+
+let startX = 0;
+
+function playCurrent(){
+  modalVideo.pause();
+  modalVideo.src = videos[currentIndex].src;
+  modalCaption.textContent = videos[currentIndex].caption;
+  modalVideo.load();
+  modalVideo.play();
+}
+
+/* override openVideo safely */
+function openVideo(index){
+  currentIndex = index;
+  playCurrent();
+  videoModal.classList.remove('hidden');
+}
+
+/* mouse / trackpad scroll */
+videoModal.addEventListener('wheel', (e) => {
+  e.preventDefault();
+
+  if (e.deltaY > 0 && currentIndex < videos.length - 1) {
+    currentIndex++;
+    playCurrent();
+  } else if (e.deltaY < 0 && currentIndex > 0) {
+    currentIndex--;
+    playCurrent();
+  }
+}, { passive: false });
+
+/* mobile swipe */
+modalVideo.addEventListener('touchstart', (e) => {
+  startX = e.touches[0].clientX;
+});
+
+modalVideo.addEventListener('touchend', (e) => {
+  const endX = e.changedTouches[0].clientX;
+  const diff = startX - endX;
+
+  if (diff > 50 && currentIndex < videos.length - 1) {
+    currentIndex++;
+    playCurrent();
+  } else if (diff < -50 && currentIndex > 0) {
+    currentIndex--;
+    playCurrent();
+  }
+});
+
 </script>
 
 </body>

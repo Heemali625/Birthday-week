@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Day 3 — Billu & Bagad Billa</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
 * { box-sizing: border-box; }
@@ -13,127 +15,178 @@ html, body {
   padding: 0;
   height: 100%;
   overflow: hidden;
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(#ffffff, #f6f7fb);
+  font-family: 'Poppins', sans-serif;
+  background: #0f0e1a;
 }
 
-/* START OVERLAY */
+/* ===== BACKGROUND LAYERS ===== */
+#sky {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: drift linear infinite;
+}
+
+@keyframes drift {
+  from { transform: translateY(0); }
+  to { transform: translateY(-120vh); }
+}
+
+/* COLOR BLOBS */
+.blob {
+  position: fixed;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.35;
+  animation: blobMove 25s ease-in-out infinite;
+}
+
+.blob.pink { background: #ff7aa2; top: 10%; left: 5%; }
+.blob.purple { background: #8b7cff; bottom: 5%; right: 10%; }
+.blob.blue { background: #5fa8ff; top: 50%; left: 60%; }
+
+@keyframes blobMove {
+  0%,100% { transform: translate(0,0); }
+  50% { transform: translate(60px,-40px); }
+}
+
+/* VIGNETTE */
+#vignette {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle, transparent 55%, rgba(0,0,0,0.7));
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ===== START OVERLAY ===== */
 #startOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(255,255,255,0.96);
+  background: #0f0e1a;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 30;
+  z-index: 10;
 }
 
 #startOverlay span {
-  font-size: 20px;
-  color: #ff7aa2;
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  color: #ff9dbb;
   animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
-  0% { opacity: 0.5; }
+  0% { opacity: 0.4; }
   50% { opacity: 1; }
-  100% { opacity: 0.5; }
+  100% { opacity: 0.4; }
 }
 
-/* STORY AREA */
+/* ===== STORY ===== */
 .story {
   position: relative;
+  z-index: 5;
   width: 100%;
   height: 100%;
-  padding: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 22px;
 }
 
+/* FLOATING PANEL */
 .scene {
   max-width: 420px;
   width: 100%;
+  padding: 28px 26px 32px;
+  border-radius: 30px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(22px);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.6);
   text-align: center;
-  animation: fadeIn 0.8s ease;
+  animation: sceneIn 1s ease;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes sceneIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* TITLE IMAGES */
 .title-images {
   display: flex;
   justify-content: center;
   gap: 18px;
-  margin-bottom: 12px;
 }
 
 .title-images img {
-  width: 130px;
-  max-width: 40vw;
-  animation: float 4s ease-in-out infinite;
+  width: 120px;
+  border-radius: 18px;
+  animation: float 7s ease-in-out infinite;
 }
 
-/* MAIN IMAGE */
 .scene img {
   width: 100%;
-  max-height: 60vh;
+  max-height: 55vh;
   object-fit: contain;
-  animation: float 4s ease-in-out infinite;
+  border-radius: 24px;
+  margin-top: 16px;
+  animation: float 7s ease-in-out infinite;
 }
 
 @keyframes float {
   0% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-14px); }
   100% { transform: translateY(0); }
 }
 
-/* TITLE TEXT */
 .title {
-  font-size: 18px;
-  color: #ff7aa2;
-  margin-bottom: 10px;
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  color: #ff9dbb;
+  margin-top: 10px;
 }
 
-/* STORY TEXT */
 .text {
-  margin-top: 16px;
+  margin-top: 20px;
   font-size: 15px;
-  line-height: 1.6;
-  color: #444;
+  line-height: 1.9;
+  color: #f3ecf2;
   white-space: pre-line;
-}
-
-/* FLOATING BACKGROUND HEARTS */
-.bg-heart {
-  position: absolute;
-  bottom: -20px;
-  font-size: 14px;
-  opacity: 0.3;
-  animation: rise 7s linear infinite;
-}
-
-@keyframes rise {
-  from { transform: translateY(0); opacity: 0.4; }
-  to { transform: translateY(-120vh); opacity: 0; }
 }
 
 /* HINT */
 .hint {
   position: fixed;
-  bottom: 16px;
+  bottom: 18px;
   width: 100%;
   text-align: center;
-  font-size: 13px;
-  color: #aaa;
+  font-size: 12px;
+  color: #cdbfd0;
+  animation: pulse 3s infinite;
+  z-index: 6;
 }
 </style>
 </head>
 
 <body>
+
+<!-- BACKGROUND -->
+<div id="sky"></div>
+<div class="blob pink"></div>
+<div class="blob purple"></div>
+<div class="blob blue"></div>
+<div id="vignette"></div>
 
 <!-- START -->
 <div id="startOverlay">
@@ -144,92 +197,120 @@ html, body {
   <div class="scene">
     <div id="titleImages" class="title-images"></div>
     <div id="sceneTitle" class="title"></div>
-    <img id="sceneImg" />
-    <div class="text" id="sceneText"></div>
+    <img id="sceneImg">
+    <div id="sceneText" class="text"></div>
   </div>
 </div>
 
 <div class="hint">Tap anywhere to continue ✨</div>
 
-<!-- MUSIC -->
 <audio id="bgMusic" loop playsinline>
   <source src="assets/day3/Raabta.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-const music = document.getElementById('bgMusic');
-const overlay = document.getElementById('startOverlay');
+/* STARS */
+const sky = document.getElementById("sky");
+for (let i = 0; i < 60; i++) {
+  const s = document.createElement("div");
+  s.className = "star";
+  const size = Math.random() * 2 + 1;
+  s.style.width = size + "px";
+  s.style.height = size + "px";
+  s.style.left = Math.random() * 100 + "vw";
+  s.style.bottom = Math.random() * 100 + "vh";
+  s.style.animationDuration = 15 + Math.random() * 20 + "s";
+  sky.appendChild(s);
+}
 
-overlay.addEventListener('click', () => {
+/* MUSIC */
+const music = document.getElementById("bgMusic");
+document.getElementById("startOverlay").onclick = () => {
   music.volume = 0.7;
   music.play().catch(()=>{});
-  overlay.style.display = 'none';
-});
+  startOverlay.style.display = "none";
+};
 
-/* 🌸 SCENES (TEXT UNCHANGED) */
+/* STORY */
 const scenes = [
   {
-    title: "Story of how billu fell for bagad billa",
-    imgs: [
-      "assets/day3/billu.png",
-      "assets/day3/bagad-billa.png"
-    ],
+    title: "Story of how Billu met Bagad Billa",
+    imgs: ["assets/day3/billu.png","assets/day3/bagad-billa.png"],
     text: ""
   },
   {
     img: "assets/day3/scene1.png",
-    text: `My heart was dead
-Love scared me..
-Relationships made me sweat in fear...`
+    text: `Billu wasn’t looking for love.
+Marriage already felt overwhelming.
+Expectations, unknowns,
+and the fear of choosing wrong…`
   },
   {
     img: "assets/day3/scene2.png",
-    text: `Then billu met bagad billa..
-It was good meeting..
-But billu never thought much about it😂`
+    text: `Then came Bagad Billa.
+Through families.
+Through conversations.
+Nothing dramatic.
+Just another arranged meeting…`
   },
   {
     img: "assets/day3/scene3.png",
-    text: `Billu was ready to face rejection 🤣🤣`
+    text: `Billu expected awkward silence,
+forced talks,
+and a polite no at the end 😅
+But things felt… easy.
+Surprisingly normal.`
   },
   {
     img: "assets/day3/scene4.png",
-    text: `Then they started talking alot..
-they even met 2-3 times
-And billu started to take this situation seriously 😁😁`
+    text: `They started talking.
+About routines.
+Habits.
+Food preferences.
+Even lunch plans 🫕🫕
+Nothing romantic.
+Just comfortable.`
   },
   {
     img: "assets/day3/scene5.png",
-    text: `Billu was like "uhh oh lagta hai billu iss baar phasne wala hai"😂😂`
+    text: `And slowly,
+that comfort started mattering.
+Billu felt calmer around him.
+Still confused.
+Still careful.
+But less scared 🥺`
   },
   {
     img: "assets/day3/scene6.png",
-    text: `And exactly as billu thought bagad billa gave green signal saying yes for this marriage 😂😂
-🤦And billu phas hi gayi😁😁`
+    text: `She realised she didn’t need sparks.
+She needed peace.
+And if she had to take this step,
+she wanted it to be with Bagad Billa 🫰🫰`
   },
   {
     img: "assets/day3/scene7.png",
-    text: `But billu ko bhi thoda thoda happy feel huA😁😁
-Akhir billu ab single jo nhi rehne wali😮‍💨😮‍💨😮‍💨`
+    text: `After thinking.
+Overthinking.
+And listening to both heart and mind 😮‍💨
+Billu finally said yes…`
   },
   {
     img: "assets/day3/scene8.png",
-    text: `Couples ko dekh dekhke single billu pagal ho chuki thi🥹🥹
-But dheere dheere billu ko apne andar dhak dhak sunayi diya...
-Billu ko akhir ek bagad billa jo pasand aa gya tha😂😂
-And slowly yet steadily billu started falling in love for that one bagad billa..
-😁😁😁 Bas itni si thi yeh story...
-Arey nhiii abhi aur bhi hai...
-Stay tunned billu aur bagad bille ki story ke next part ke liye...`
+    text: `Love didn’t happen instantly.
+But trust did.
+And from that trust,
+love slowly found its way 💗
+Bas itni si thi yeh shuruaat…
+Because abhi toh journey shuru hui hai…
+Billu aur Bagad Billa ki kahani ✨`
   }
 ];
 
 let index = 0;
-
-const imgEl = document.getElementById('sceneImg');
-const textEl = document.getElementById('sceneText');
-const titleEl = document.getElementById('sceneTitle');
-const titleImages = document.getElementById('titleImages');
+const imgEl = document.getElementById("sceneImg");
+const textEl = document.getElementById("sceneText");
+const titleEl = document.getElementById("sceneTitle");
+const titleImages = document.getElementById("titleImages");
 
 function render() {
   titleImages.innerHTML = "";
@@ -247,24 +328,11 @@ function render() {
     imgEl.style.display = "block";
     imgEl.src = scenes[index].img;
   }
-
-  spawnBgHeart();
 }
 
 function nextScene() {
   index = (index + 1) % scenes.length;
   render();
-}
-
-/* BACKGROUND HEARTS */
-function spawnBgHeart() {
-  const h = document.createElement('div');
-  h.className = 'bg-heart';
-  h.textContent = Math.random() > 0.5 ? '💗' : '✨';
-  h.style.left = Math.random() * 100 + 'vw';
-  h.style.animationDuration = 5 + Math.random() * 4 + 's';
-  document.body.appendChild(h);
-  setTimeout(() => h.remove(), 9000);
 }
 
 render();

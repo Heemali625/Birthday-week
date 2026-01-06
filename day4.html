@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Day 4 — Intro</title>
+
+<style>
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #bfe9f5;
+  font-family: system-ui, -apple-system;
+  overflow: hidden;
+}
+
+/* ---------- INTRO WRAPPER ---------- */
+.intro {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- SCROLL WINDOW ---------- */
+.scroll-window {
+  width: 90vw;
+  max-width: 420px;
+  height: 70vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ---------- SCROLL TRACK ---------- */
+.scroll-track {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  transition: transform 1.6s ease-in-out;
+}
+
+/* ---------- FRAME ---------- */
+.frame {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.frame img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ---------- CONTINUE ---------- */
+.continue-btn {
+  margin-top: 20px;
+  padding: 12px 26px;
+  border-radius: 30px;
+  border: none;
+  background: #ff7aa2;
+  color: white;
+  font-size: 16px;
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="intro" id="intro">
+  <div class="scroll-window">
+    <div class="scroll-track" id="track">
+      <div class="frame"><img src="assets/day4/bouquet/1.png"></div>
+      <div class="frame"><img src="assets/day4/bouquet/2.png"></div>
+      <div class="frame"><img src="assets/day4/bouquet/3.png"></div>
+      <div class="frame"><img src="assets/day4/bouquet/4.png"></div>
+      <div class="frame"><img src="assets/day4/bouquet/5.png"></div>
+    </div>
+  </div>
+
+  <button class="continue-btn" id="continueBtn">Continue 💗</button>
+</div>
+
+<script>
+const track = document.getElementById("track");
+const continueBtn = document.getElementById("continueBtn");
+
+const frames = document.querySelectorAll(".frame");
+let index = 0;
+
+/* calculate frame height AFTER images load */
+window.onload = () => {
+  const frameHeight = frames[0].offsetHeight + 40;
+
+  function scrollNext() {
+    index++;
+    if (index >= frames.length) {
+      continueBtn.style.display = "block";
+      return;
+    }
+    track.style.transform = `translateY(-${index * frameHeight}px)`;
+    setTimeout(scrollNext, 2200); // slow + pause
+  }
+
+  setTimeout(scrollNext, 2200);
+};
+
+/* Continue just hides intro for now */
+continueBtn.onclick = () => {
+  document.getElementById("intro").style.display = "none";
+  console.log("Intro completed cleanly ✅");
+};
+</script>
+
+</body>
+</html>

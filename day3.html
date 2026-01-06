@@ -19,7 +19,7 @@ html, body {
   background: #0f0e1a;
 }
 
-/* ===== BACKGROUND LAYERS ===== */
+/* ===== BACKGROUND ===== */
 #sky {
   position: fixed;
   inset: 0;
@@ -40,7 +40,7 @@ html, body {
   to { transform: translateY(-120vh); }
 }
 
-/* COLOR BLOBS */
+/* BLOBS */
 .blob {
   position: fixed;
   width: 380px;
@@ -69,7 +69,7 @@ html, body {
   pointer-events: none;
 }
 
-/* ===== START OVERLAY ===== */
+/* START OVERLAY */
 #startOverlay {
   position: fixed;
   inset: 0;
@@ -93,19 +93,19 @@ html, body {
   100% { opacity: 0.4; }
 }
 
-/* ===== STORY ===== */
+/* STORY */
 .story {
   position: relative;
   z-index: 5;
   width: 100%;
   height: 100%;
+  padding: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 22px;
 }
 
-/* FLOATING PANEL */
+/* PANEL */
 .scene {
   max-width: 420px;
   width: 100%;
@@ -123,6 +123,31 @@ html, body {
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* TITLE FIX */
+.scene.title-scene {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.scene.title-scene .title-images {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.scene.title-scene .title-images img {
+  width: 130px;
+  max-width: 42vw;
+  animation: none;
+}
+
+@media (max-height: 700px) {
+  .scene.title-scene {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+/* IMAGES */
 .title-images {
   display: flex;
   justify-content: center;
@@ -150,6 +175,7 @@ html, body {
   100% { transform: translateY(0); }
 }
 
+/* TEXT */
 .title {
   font-family: 'Playfair Display', serif;
   font-size: 20px;
@@ -194,7 +220,7 @@ html, body {
 </div>
 
 <div class="story" onclick="nextScene()">
-  <div class="scene">
+  <div class="scene" id="sceneContainer">
     <div id="titleImages" class="title-images"></div>
     <div id="sceneTitle" class="title"></div>
     <img id="sceneImg">
@@ -225,10 +251,11 @@ for (let i = 0; i < 60; i++) {
 
 /* MUSIC */
 const music = document.getElementById("bgMusic");
-document.getElementById("startOverlay").onclick = () => {
+const overlay = document.getElementById("startOverlay");
+overlay.onclick = () => {
   music.volume = 0.7;
   music.play().catch(()=>{});
-  startOverlay.style.display = "none";
+  overlay.style.display = "none";
 };
 
 /* STORY */
@@ -311,11 +338,17 @@ const imgEl = document.getElementById("sceneImg");
 const textEl = document.getElementById("sceneText");
 const titleEl = document.getElementById("sceneTitle");
 const titleImages = document.getElementById("titleImages");
+const sceneBox = document.getElementById("sceneContainer");
 
 function render() {
   titleImages.innerHTML = "";
   titleEl.textContent = scenes[index].title || "";
   textEl.textContent = scenes[index].text || "";
+  sceneBox.classList.remove("title-scene");
+
+  if (index === 0) {
+    sceneBox.classList.add("title-scene");
+  }
 
   if (scenes[index].imgs) {
     imgEl.style.display = "none";

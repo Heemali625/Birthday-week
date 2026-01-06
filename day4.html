@@ -172,15 +172,18 @@ body{
 
 /* ===== MODAL ===== */
 .modal{
-  position:fixed;inset:0;
-  background:rgba(0,0,0,.75);
-  display:flex;align-items:center;justify-content:center;
+  position:fixed;
+  inset:0;
+  background: rgba(0,0,0,.95);
+  display:flex;
+  align-items:center;
+  justify-content:center;
   z-index:999
 }
 .modal.hidden{display:none}
 .modal-content{width:90%;max-width:420px;text-align:center}
 .modal video{width:100%;border-radius:18px}
-.modal-caption{margin-top:10px;font-size:13px}
+.modal-caption{margin-top:10px;font-size: 20px;}
 
 audio{display:none}
 </style>
@@ -336,10 +339,10 @@ function openGallery(){
 
 let currentIndex=0;
 const videos=[
-{src:'assets/day4/chaos.mp4',caption:'Too dramatic 😜'},
-{src:'assets/day4/irritate.mp4',caption:'Irritate karna 😁'},
-{src:'assets/day4/mood-swings.mp4',caption:'Mood swings 🫠'},
-{src:'assets/day4/same-same.mp4',caption:'Same madness 💕'}
+{src:'assets/day4/chaos.mp4',caption:'Coz drama is part of mine 😜'},
+{src:'assets/day4/irritate.mp4',caption:'Tumko Irritate karna is my favorite task 😁'},
+{src:'assets/day4/mood-swings.mp4',caption:'I promise to add chaos to your calm 🫠'},
+{src:'assets/day4/same-same.mp4',caption:'Coz meri sangat ka asar toh tumpar bhi hoga 💕'}
 ];
 
 function openVideo(index){
@@ -408,5 +411,43 @@ modalVideo.addEventListener('touchend', (e) => {
 
 </script>
 
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
 </body>
 </html>
